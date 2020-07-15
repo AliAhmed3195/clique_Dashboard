@@ -1,0 +1,143 @@
+<style>
+.contentdemoBasicUsage div.demo-content {
+  height: 450px; }
+
+.contentdemoBasicUsage div[ng-controller] {
+  height: 100%;
+  padding-bottom: 15px; }
+
+.contentdemoBasicUsage md-content {
+  padding: 24px; }
+
+.listdemoListControls md-divider {
+  margin-top: 0;
+  margin-bottom: 0; }
+
+.listdemoListControls md-list {
+  padding-top: 0; 
+  width:100%;
+  
+}
+.listdemoListControls md-list-item {
+    border-bottom:1px solid #ccc;
+}
+.listdemoListControls md-list-item > p,
+.listdemoListControls md-list-item > .md-list-item-inner > p,
+.listdemoListControls md-list-item .md-list-item-inner > p,
+.listdemoListControls md-list-item .md-list-item-inner > .md-list-item-inner > p {
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */
+
+  font-size:18px;
+}
+
+</style>
+
+        
+<div layout="column" ng-cloak class="contentdemoBasicUsage">
+  <md-toolbar class="">
+    <div class="md-toolbar-tools" style="background:#26A7DE">
+      <h2 class="md-flex">Connect Your Accounting Software</h2>
+    </div>
+  </md-toolbar>
+<md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+  <md-content flex layout-padding class="listdemoListControls">
+    <p style="min-width:700px;">&nbsp;</p>
+    <md-list>
+      <md-subheader ng-show="showErrorMessage"><p class="md-subtitle" style="color:red;font-size:16px;">{{errorMessage}}</p></md-subheader>
+      <md-list-item ng-repeat="erp in erpItems" class="noright" ng-disabled="false">
+        <img alt="{{ erp.name }}" ng-src="{{ erp.logo }}" class="md-avatar" />
+        <p>{{ erp.name }}</p>
+       
+        <md-button 
+        class=" md-raised {{erp.status==true ? 'md-primary' : 'md-secondry'}} {{erp.is_connected==true ? 'md-cancel' : (erp.status==true ? 'md-save' : '')}}" 
+        ng-disabled="{{erp.status==true ? false : true}}" 
+        ng-if="erp.type =='quickbooks'" 
+        ng-click="openErpConnectDialog(erp.type,erp.is_connected)">{{erp.is_connected==true ? 'Disconnect' : (erp.status==true ? 'Connect' : 'Comming Soon')}}
+
+        </md-button>
+        
+
+        <!--Xero Actions-->		
+        
+        <md-button 
+            class="md-primary md-raised cyan-500-bg"
+            style="text-transform:none !important"
+            ng-if="erp.type =='xero' && erp.is_connected==false"
+            ng-click="openErpConnectDialog(erp.type,erp.is_connected);"
+            >
+            Connect to
+            <img ng-src="assets/images/xero.png" style="height:13px; vertical-align:middle" vertial-align="middle"></img>
+        </md-button>
+
+        <md-button 
+            class="md-primary md-raised red-500-bg"
+            style="text-transform:none !important"
+            ng-if="erp.type =='xero' && erp.is_connected==true"
+            ng-click="openErpConnectDialog(erp.type,erp.is_connected)"
+            >
+            Disconnect
+            
+        </md-button>
+        <!--Eof Xero Actions-->
+
+
+        <!--Freshbook Actions-->   
+        
+        <md-button 
+            class="md-primary md-raised blue-500-bg"
+            style="text-transform:none !important"
+            ng-if="erp.type =='freshbook' && erp.is_connected==false"
+            ng-click="openErpConnectDialog(erp.type,erp.is_connected);"
+            >
+            Connect to
+            <img ng-src="assets/images/freshbook_logo.png" style="height:16px; vertical-align:middle" vertial-align="middle"></img>
+        </md-button>
+
+        <md-button 
+            class="md-primary md-raised red-500-bg"
+            style="text-transform:none !important"
+            ng-if="erp.type =='freshbook' && erp.is_connected==true"
+            ng-click="openErpConnectDialog(erp.type,erp.is_connected)"
+            >
+            Disconnect
+            
+        </md-button>
+        <!--Eof Freshbook Actions-->   
+
+         <!--Clique Actions-->   
+        
+        <md-button 
+            class="md-primary md-raised blue-500-bg"
+            style="text-transform:none !important"
+            ng-if="erp.type =='Standalone' && erp.is_connected==false"
+            ng-click="openErpConnectDialog(erp.type,erp.is_connected);"
+            >
+            Connect to
+            <img ng-src="https://apps.clique.center/apps/common/assets/images/logo/standalone.png" style="height:16px; vertical-align:middle" vertial-align="middle"></img>
+        </md-button>
+
+        <md-button 
+            class="md-primary md-raised red-500-bg"
+            style="text-transform:none !important"
+            ng-if="erp.type =='Standalone' && erp.is_connected==true"
+            ng-click="openErpConnectDialog(erp.type,erp.is_connected)"
+            >
+            Disconnect
+            
+        </md-button>
+        <!--Eof Clique Actions-->  
+
+      </md-list-item>
+    </md-list>
+
+
+  </md-content>
+
+</div>

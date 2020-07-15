@@ -1,0 +1,41 @@
+(function () {
+    'use strict';
+
+    angular
+    .module('app.dashboard')
+    .factory('DashboardModel', DashboardModel);
+
+    DashboardModel.$inject = ['$http','Clique'];
+    function DashboardModel($http,Clique) {
+        var service = {};
+
+        service.GetErpStatus = GetErpStatus;
+        service.GetErpList = GetErpList;
+        service.DisconnectQuickBooks = DisconnectQuickBooks;
+        service.GetDashboardApps = GetDashboardApps;
+        
+        return service;
+
+
+        function GetErpStatus() {
+            return Clique.callService('get','/erp/status','').then(handleSuccess, handleError);
+        }
+        function GetErpList() {
+            return Clique.callService('get','/erp','').then(handleSuccess, handleError);
+        }
+        function GetDashboardApps() {
+            return Clique.callService('get','/dashboard/apps','').then(handleSuccess, handleError);
+        }
+        function DisconnectQuickBooks() {
+            return Clique.callService('get','/erp/quickbooks/disconnect','').then(handleSuccess, handleError);
+        }
+        function handleSuccess(res) {
+            return res.data;
+        }
+
+        function handleError(error) {
+            return error;
+        }
+    }
+
+})();

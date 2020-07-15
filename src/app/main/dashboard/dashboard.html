@@ -1,0 +1,35 @@
+<div class="page-layout carded fullwidth" layout="row">
+    <div class="center" layout="column" flex>
+        <div style="height: 10px ! important;">
+        </div>
+        
+        <div layout="row" layout-align="center center" style="min-height:600px;" class="dashboard-progress" ng-hide="showDashboard">
+            <div flex="30">
+                <md-progress-linear md-mode="indeterminate" class="md-accent md-hue-2"></md-progress-linear>
+            </div>
+        </div>
+
+        
+
+        <md-content class="content DashboardApps md-whiteframe-3dp app_bg" flex ms-scroll style=" border-radius:3px;margin: 0% -2% 0.7% -2%;  background: url({{randomeBg}}); background-size:cover; height:600px;" ng-show="showDashboard">
+			<div class="background">
+			<md-grid-list md-cols-xs="2" md-cols-sm="2" md-cols-md="2" md-cols-gt-md="7" md-gutter="16px" md-row-height="200px" >
+
+                <md-grid-tile ng-repeat="app in vm.apps" class="imgclass2"  >
+
+                    <div ng-if="vm.showHeadline" class="mydiv hoverimage" >
+
+                        <a href="" ng-click="openApp(app)">
+                            <img class="icon{{$index + 1}}" id="appicon_{{$index + 1}}" ng-mouseover="hoverIn(vm.apps.length)" ng-mouseenter="stopAppIconAnimation()" ng-src="{{app.media.image.src}}" alt="{{app.media.image.alt}}" ng-show="app.media.image" />
+                        </a>
+                        <md-grid-tile-footer class="transparent">
+                            <h3 class="transparent" align="center" style="color:{{app_color}}">{{app.name}}</h3>
+                        </md-grid-tile-footer>
+                    </div>
+                </md-grid-tile>
+
+            </md-grid-list>
+			</div>
+        </md-content>
+    </div>
+</div>

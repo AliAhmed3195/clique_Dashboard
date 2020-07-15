@@ -1,0 +1,107 @@
+{
+    "data": [
+        {
+            "name": "Invoices",
+            "title": "Invoices",
+            "url": "/apps/invoice/",
+            "text": "",
+            "media": {
+                "image": {
+                    "src": "assets/images/appicons/invoice.png",
+                    "alt": "Invoices"
+                }
+            },
+            "is_dependent":{
+                "status":true,
+                "app":"Erp"
+            }
+            
+        },
+        {
+            "name": "Settings",
+            "title": "Settings",
+            "url": "/apps/settings/",
+            "text": "",
+            "media": {
+                "image": {
+                    "src": "assets/images/appicons/settings.png",
+                    "alt": "Settings"
+                }
+            },
+            "is_dependent":{
+                "status":false,
+                "app":""
+            }
+        },
+        {
+            "name": "Customers",
+            "title": "Customers",
+            "url": "/apps/customer/",
+            "text": "",
+            "media": {
+                "image": {
+                    "src": "assets/images/appicons/customer.png",
+                    "alt": "Contacts"
+                }
+            },
+            "is_dependent":{
+                "status":true,
+                "app":"Erp"
+            }
+
+        },
+        {
+            "name": "Products",
+            "title": "Products",
+            "url": "/apps/inventory/",
+            "text": "",
+            "media": {
+                "image": {
+                    "src": "assets/images/appicons/inventory.png",
+                    "alt": "Products"
+                }
+            },
+            "is_dependent":{
+                "status":true,
+                "app":"Erp"
+            }
+        }
+       
+        ,
+         {
+            "name": "Employees",
+            "title": "Employees",
+            "url": "/apps/employee/",
+            "text": "",
+            "media": {
+                "image": {
+                    "src": "assets/images/appicons/employee.png",
+                    "alt": "Employees"
+                }
+            },
+            "is_dependent":{
+                "status":true,
+                "app":"Erp"
+            }
+        },
+         {
+            "name": "Bookkeeping\nPrograms",
+            "title": "Erp",
+            "url": "/erp",
+            "text": "",
+            "media": {
+                "image": {
+                    "src": "assets/images/appicons/erp.png",
+                    "alt": "Sales"
+                }
+            }
+            ,
+            "is_dependent":{
+                "status":false,
+                "app":""
+            }
+        }
+        
+
+    ]
+}     

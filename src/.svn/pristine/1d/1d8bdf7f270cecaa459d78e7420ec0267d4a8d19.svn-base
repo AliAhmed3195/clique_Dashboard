@@ -1,0 +1,416 @@
+(function ()
+{
+    'use strict';
+
+    angular
+    .module('app.dashboard')
+    .controller('DashboardController', DashboardController)
+    function DashboardController($location,$scope,$mdDialog,$window,Clique,$http,$q,$rootScope,QuickBooksService,$timeout,DashboardModel,XeroService)
+    {
+      var vm = this;
+     
+      vm.apps=[];
+
+      
+
+      /*start background code*/
+      $scope.randomNumber=1;
+      getRandomInt(0, 11);
+
+      $scope.promise = DashboardModel.GetDashboardApps();
+      $scope.promise.then(function(response) {
+           vm.apps = response.data;
+           if(response.data.length > 0){
+              $scope.numberOfBox=response.data.length; 
+              AnimateRotate(10,"infinite" ,$scope.numberOfBox ,1,true);
+           }
+      });
+
+      $scope.polygonDesign=[
+        {name:'assets/images/backgrounds/polygonbg/pb1.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb3.jpg',color:"white"},  
+        {name:'assets/images/backgrounds/polygonbg/pb4.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb5.jpg',color:"white"},  
+        {name:'assets/images/backgrounds/polygonbg/pb6.jpg',color:"white"},  
+        {name:'assets/images/backgrounds/polygonbg/pb7.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb8.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb9.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb10.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb11.jpg',color:"white"},  
+        {name:'assets/images/backgrounds/polygonbg/pb13.jpg',color:"black"},  
+        {name:'assets/images/backgrounds/polygonbg/pb23.jpg',color:"black"},  
+      ];
+
+      function getRandomInt(min, max) {
+          $scope.randomNumber=Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      $scope.showDashboard=false;
+      var img = new Image();
+      img.onload = function () {
+         $timeout(function(){
+            $scope.showDashboard=true;
+         },300);
+      }
+      img.src = $scope.polygonDesign[$scope.randomNumber].name;
+      /*eof background*/
+	  
+	  
+
+
+      $timeout(function() {vm.showHeadline = true;},1000);
+          
+        QuikcbooksDirectLogin();
+        openQuickBooksDialogWhenDisconnectFromQBAppCenter();
+        $scope.hoverIn = function(length){
+           var i;
+           for (i = 1; i <=length; i++) {
+                $("#image_"+i).removeClass('icon'+i);
+           }
+          };
+        $scope.hoverOut = function(length){
+          var i;
+         for (i = 1; i <=length; i++) {
+    
+         }
+        };
+       $scope.openErpConnectDialog = function() {
+            $mdDialog.show({
+              controller: ERPController,
+              templateUrl: 'app/main/dashboard/erp.html',
+              parent: angular.element(document.body),
+              clickOutsideToClose:true,
+              fullscreen: true // Only for -xs, -sm breakpoints.
+            })
+            
+          };
+        $scope.openERPConnectionStatusDialog = function() {
+            $mdDialog.show({
+			  scope               : $scope,
+              preserveScope       : true,
+              controller: openERPConnectionStatusController,
+              templateUrl: 'app/main/dashboard/erp_connection_status.html',
+              parent: angular.element(document.body),
+              clickOutsideToClose:false,
+            })
+            
+          };  
+
+       
+        /*App Methods*/
+        $scope.openApp=function(app){
+          localStorage.setItem('app_id',app.id);
+			$scope.erpName='';
+			$scope.erpShow = true;
+            switch(app.title){
+                case "Erp":
+                    $scope.openErpConnectDialog();
+                break;
+                default :
+                    if(app.is_dependent.status==true){
+						
+                        switch(app.is_dependent.app){
+							
+                            case "Erp":
+                                 $scope.openERPConnectionStatusDialog();
+                                 $rootScope.selectedApp=app;
+								 //$rootScope.erpName = 'sddsds';
+								 //$rootScope.erpName'';
+                                 
+                                 //$rootScope.selectAppImage=app.media.image.src;
+                              
+                              $scope.promise = DashboardModel.GetErpStatus();
+                              $scope.promise.then(function(response) {
+								//alert(response.statuscode)
+                              if (response.statuscode == 0) {
+								  	//alert(response.statuscode);
+                                      var count=0;
+                                      var is_connected=0;
+                                      if(response.data.erp!=undefined){
+                                          var count=0;
+                                            var is_connected=0;
+                                            if(response.data.erp!=undefined){
+                                                var erpObj=response.data.erp;
+                                                count = Object.keys(erpObj).length;
+                                                if(count > 0){
+													$scope.erpShow = false;
+                                                    var is_connected=erpObj.is_connected;
+													$scope.erpName = erpObj.type;
+													
+													//alert($rootScope.erpName);
+                                                }
+                                            }
+                                            //console.log(response);
+                                            if(is_connected==0){
+                                                $mdDialog.hide();
+                                                $scope.openErpConnectDialog(); 
+                                            }else{
+												$timeout(function(){
+														window.location.assign(app.url);  
+													},2000);	
+                                            }
+
+
+                                      }
+                              }
+                              else
+                                  {
+                                      $mdDialog.hide();
+                                      Clique.showToast(response.statusmessage,'bottom right','error');
+                                  }
+                                  
+                              });
+							 
+
+                            break;
+                        }
+
+                    }else{
+
+                        window.location.assign(app.url);   
+                    }
+                break;
+            }
+        };
+
+
+          /*QuickBooks connection dialog*/
+         function openQuickBooksDialogWhenDisconnectFromQBAppCenter(){
+                var disconnect_intuit=false;
+                if (typeof(Storage) !== "undefined") {
+                    var disconnect_intuit_info=sessionStorage.getItem("disconnect_intuit");
+                    if(disconnect_intuit_info!=null){
+                        disconnect_intuit=true;
+                    }
+                }
+                if(disconnect_intuit==true){
+                    QuickBooksService.openDialog();
+                    if (typeof(Storage) !== "undefined") {
+                          sessionStorage.removeItem("disconnect_intuit");
+                    }  
+                }
+          }
+
+        /*QuickBooks direct login*/
+
+        function QuikcbooksDirectLogin(){
+                var signin_intuit=false;
+                if (typeof(Storage) !== "undefined") {
+                    var signIntuitInfo=sessionStorage.getItem("signin_intuit");
+                    if(signIntuitInfo!=null){
+                        signin_intuit=true;
+                    }
+                }
+              if(signin_intuit==true){
+
+
+                $scope.promise = DashboardModel.GetErpStatus();
+                $scope.promise.then(function(response) {
+                if (response.statuscode == 0) {
+                    var erpObj=response.data.erp;
+                    console.log("--erpinfo--");
+                    console.log(erpObj);
+                   if(erpObj.is_connected==0){
+
+                      var script = $window.document.createElement("script");
+                      script.type = "text/javascript";
+                      script.src="https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere-1.3.3.js"
+                      script.onload= function(){
+                        $scope.$emit('intuitjs:loaded');
+                      }
+                      $window.document.body.appendChild(script);
+                      $scope.$on('intuitjs:loaded',function(evt) {
+                      
+                      $window.intuit.ipp.anywhere.setup({
+                          //grantUrl: 'http://apps.clique.center/authorize/?authtoken='+authtoken,
+                          grantUrl: 'https://apps.clique.center/authorize/',
+                          datasources: {quickbooks : true, payments : false}
+                        });
+                        intuit.ipp.anywhere.directConnectToIntuit();
+                        $scope.$apply();
+                      });
+
+                   }
+
+                }else{
+
+                }
+                
+                });
+                    
+                    if (typeof(Storage) !== "undefined") {
+                          sessionStorage.removeItem("signin_intuit");
+                    }  
+                                  
+
+              }
+        };
+
+        
+        $scope.stopAppIconAnimation=function(){
+          $timeout(function(){
+              $scope.stopAnimation=true;      
+          });
+        }
+        $scope.stopAnimation=false;      
+        function AnimateRotate(angle,repeat,total,id,flag) {
+              var duration= 500;
+              var $elem = $('#appicon_'+id);
+            if($scope.stopAnimation==false)
+            {
+                $({deg: 0}).animate({deg: angle}, {
+                  duration: duration,
+                  step: function(now) {
+                      $elem.css({
+                          'transform': 'rotate('+ now +'deg)'
+                      });
+                      $elem.css({'transition-duration': '0s'});
+
+                  },
+              complete: function() {
+                   $({deg: 0}).animate({deg: angle}, {
+                        duration: duration,
+                    step: function(now) {
+                      $elem.css({'transition-duration': '1s'});
+                      $elem.css({'transform': 'rotate('+ 0 +'deg)'});
+                    }
+                   });
+                if(flag==true)
+                {
+                  var totalIcone = total;
+                  flag = false;
+                }  
+                if(total==0)
+                {
+                  id = 1;
+                  total = $scope.numberOfBox;
+                  flag = true;
+                }
+                else
+                {
+                   id = id + 1;
+                } 
+                total = total - 1;  
+                  AnimateRotate(angle,repeat,total,id,flag);
+                }
+              });
+            }
+          }
+
+          
+    }
+
+    /*Erp Controller*/
+    function ERPController(api,$scope,Clique,QuickBooksService,$mdDialog,$http,DashboardModel,XeroService){
+
+          $scope.showProgress=false;
+          $scope.erpItems;
+		  
+		  $scope.xeroURL = " http://192.168.1.100:8000/v1/xero/doauth";
+	  	  $scope.connectXero=connectXero;
+	      function connectXero(URL){
+			
+			var w = 800;
+			var h = 600;
+			var left = (screen.width - w) / 2;
+            var top = (screen.height - h) / 4;  // for 25% - devide by 4  |  for 33% - devide by 3
+            var targetWin = window.open(URL, "Clique - Xero Connect", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+			
+			
+			//window.open(URL, '', 'height=400,width=500')
+		}
+		  
+          $scope.promise = DashboardModel.GetErpList();
+          $scope.promise.then(function(response) {
+          if (response.statuscode == 0) {
+            $scope.erpItems=response.data.items
+          }
+          else{
+                  Clique.showToast(response.statusmessage,'bottom right','error');
+              }
+          });
+
+        $scope.openErpConnectDialog=function(erpTypes,isConnected){
+            //if(isConnected==1) return;
+            switch(erpTypes){
+                case "quickbooks":
+                    if(isConnected==0){
+                        $mdDialog.hide();
+                        QuickBooksService.openDialog(); 
+                    }else{
+                      $scope.showProgress=true; 
+                      $scope.disconnectQuickbooks();
+                    }
+
+                break;
+				case "xero":
+                if(isConnected==0){
+                        $mdDialog.hide();
+                        XeroService.openDialog(); 
+                    }else{
+                      $scope.showProgress=true; 
+                      $scope.disconnectQuickbooks();
+                    }
+
+                break;
+				
+            }
+        }
+        $scope.cancelDialog=function(){
+            $mdDialog.hide();
+        }
+        $scope.hide = function() {
+          $mdDialog.hide();
+        };
+
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        };
+
+        $scope.answer = function(answer) {
+          $mdDialog.hide(answer);
+        };
+        $scope.disconnectQuickbooks=function(){
+
+          $scope.promise = DashboardModel.DisconnectQuickBooks();
+          $scope.promise.then(function(response) {
+          if (response.statuscode == 0) {
+                 Clique.showToast(response.statusmessage,'bottom right','success');
+          }
+          else{
+                  Clique.showToast(response.statusmessage,'bottom right','error');
+              }
+            $scope.showProgress=false;
+            $mdDialog.hide();
+  
+          });
+
+        }
+
+    }
+    function openERPConnectionStatusController($scope,$rootScope,Clique,$mdDialog){
+        $scope.selectedApp=$rootScope.selectedApp;
+		$scope.erpName="Faisal";
+		
+			
+		//$rootScope.erpName
+        $scope.cancelDialog=function(){
+            $mdDialog.hide();
+        }
+        $scope.hide = function() {
+          $mdDialog.hide();
+        };
+
+        $scope.cancel = function() {
+          $mdDialog.cancel();
+        };
+
+        $scope.answer = function(answer) {
+          $mdDialog.hide(answer);
+        };
+    }
+
+    
+ 
+})();
+

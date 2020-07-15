@@ -1,0 +1,39 @@
+<style>
+md-dialog-content{
+  color:#000;
+  font-size:16px;
+}
+</style>
+<md-dialog aria-label="QuickBooks Connecting Dialog">
+    <md-toolbar>
+      <div class="md-toolbar-tools green-500-bg">
+        <h2>Connect to QuickBooks</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon class="icon icon-close-circle mdi-24px"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="min-width:400px;max-height:710px; padding:20px; ">
+      <div class="jumbotron" ng-init="connected = true">
+        <div class="control-group">
+          <div class="controls" ng-show="!connected">
+            Loading QuickBooks Connect button
+          </div>
+          <div class="controls" ng-show="connected">
+            <connect-to-quickbooks />
+          </div>
+          <!--<md-button ng-click="submit()" class="md-primary">-->
+        </div>
+      </div>
+       <p align="justify">
+        <img src="assets/images/logos/logo-intuit-footer.png" width="100">
+      </p>
+      <p align="justify">
+        © 2016 Intuit Inc. All rights reserved. Intuit and QuickBooks are registered trademarks of Intuit Inc. Terms and conditions, features, support, pricing, and service options subject to change without notice.
+      </p>
+      </md-dialog-content>
+      <md-dialog-actions>
+    </md-dialog-actions>
+
+</md-dialog>

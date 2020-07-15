@@ -1,0 +1,73 @@
+<style>
+md-dialog-content{
+  color:#000;
+  font-size:16px;
+}
+ul {
+  list-style: none;
+}
+
+ul li:before {
+  content: '✓';
+  color:#FF0000;
+}
+p:before {
+  content: '✓';
+  color: #009900;
+  padding-right;5px;
+}
+</style>
+<md-dialog aria-label="QuickBooks Connecting Dialog">
+    <md-toolbar>
+      <div class="md-toolbar-tools green-500-bg">
+        <h2>Connect to Xero</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon class="icon icon-close-circle mdi-24px"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content >
+      <div class="jumbotron" ng-init="connected = true">
+        <div class="control-group">
+          <div class="controls" ng-show="!connected">
+            Loading Xero Connect button
+          </div>
+		 
+		 <div layout="row" layout-align="center center">
+		 <div flex="70">
+			 <div layout="row" layout-align="center center">
+				  <div style="font-size:18px; font-weight:bold;">Connect Clique to your Accounting System:Xero</div>
+				 
+			 </div>
+			 <br />
+			 <div layout="row" layout-align="center center" class="md-padding">
+				  <div flex="50" align="center"><span class="md-caption">To connect Clique to Xero click the blue "Connect to Xero" button on right.</span></div>
+				  <div flex="50" align="center"><a href="" ng-click="connectXero(xeroURL);"><img src="assets/images/logos/xero-connect.png" ></a></div> 
+				  
+			 </div>
+			 <md-divider></md-divider>
+		 <br />
+		 <div layout="row" layout-align="center center">
+		  <div flex="50" class="md-padding" align="center">
+		  	<span ><img src="assets/images/logos/xero-logo.png" width="50"></span>
+			<span >&nbsp;&nbsp;</span>
+			<span ><img src="assets/images/logos/clique.png" width="50"></span>
+		  </div>
+		  <div flex="50">
+		  	 <div style="font-weight:bold;">Then what happens?</div>
+			 <p style="font-size:14px;">After you click we'll redirect to Xero website where you need to log in Xero.</p>
+			 <p style="font-size:14px;">Once you grant Clique permission.You will be redirected back to Clique.</p>
+			 <p style="font-size:14px;">Clique will make no changes to your Xero account untill you tell us to,you can disconnect at any time.</p>
+		  </div>
+		</div>
+			</div>
+		 </div>
+	
+        </div>
+      </div>
+    
+      </md-dialog-content>
+   
+
+</md-dialog>

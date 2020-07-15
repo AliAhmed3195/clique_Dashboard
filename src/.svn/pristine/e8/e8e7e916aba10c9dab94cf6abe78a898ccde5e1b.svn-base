@@ -1,0 +1,36 @@
+<style>
+.contentdemoBasicUsage{
+  height: auto; 
+  font-size:16px;
+
+}
+.overflow_hidden{
+  overflow-x:hidden;
+  overflow-y:hidden;
+  overflow:hidden;
+}
+</style>
+
+<div layout="column" ng-cloak class="contentdemoBasicUsage overflow_hidden">
+  <md-toolbar class="">
+  <div class="md-toolbar-tools green-500-bg">
+    <h2 class="md-flex">&nbsp;</h2>
+  </div>
+</md-toolbar>
+<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+<md-content flex layout-padding class="listdemoListControls overflow_hidden">
+<p>Please wait while system find out your connection status</p>
+<div layout="row" layout-align="center center" class="overflow_hidden">
+
+  <div flex="33" align="center"> <img src="{{selectedApp.media.image.src}}" width="80"><br>{{selectedApp.name}}</div>
+  <div flex="33" align="center"><i class="icon-arrow-right s40"></i></div>
+  
+  
+  <div flex="33" align="center" ng-show="erpShow"><img src="assets/images/logos/ring.gif" width="80" style="border:1px solid #ccc; border-radius:3px;"><br>ERP</div>
+  
+  <div flex="33" align="center" ng-if="erpName=='quickbooks'"><img src="assets/images/logos/logo-qbo.png" width="80" style="border:1px solid #ccc; border-radius:3px;"><br>Quickbooks</div>
+  <div flex="33" align="center" ng-if="erpName=='xero'"><img src="assets/images/logos/xero-logo.png" width="80" style="border:1px solid #ccc; border-radius:3px;"><br>Xero</div>
+</div>
+</md-content>
+
+</div>
